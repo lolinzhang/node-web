@@ -3,10 +3,11 @@
  */
 
 var express = require("express");
-var logger = require("morgan");
 var session = require("express-session");
 var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
+var i18n = require('i18n');
+var log4js = require('log4js');
 
 var app = module.exports = express();
 
@@ -31,10 +32,6 @@ app.response.message = function(msg){
     return this;
 };
 
-// log
-if(!module.parent){
-    app.use(logger("dev"));
-}
 
 // serve static files
 app.use("/static", express.static(__dirname + "/public"));
@@ -86,6 +83,43 @@ app.use(function(req, res, next){
 
     next();
 });
+
+//配置i18n
+i18n.configure({
+    locales:['en', 'zh-CN'],  //声明包含的语言
+    directory: __dirname + '/locales',  //翻译json文件的路径
+    defaultLocale: 'zh-CN'   //默认的语言，即为上述标准4
+});
+
+app.use(i18n.init);
+
+//var greeting = i18n.__('Hello');
+//console.log('i18n ...' + greeting);
+
+//log
+log4js.configure({
+    appenders: [
+        { type: 'console' }, //控制台输出
+        {
+            type: 'file', //文件输出
+            filename: 'logs/access.log',
+            maxLogSize: 1024,
+            backups:3,
+            category: 'normal'
+        }
+    ],
+    replaceConsole: true
+});
+
+exports.logger=function(name){
+    var logger = log4js.getLogger(name);
+    logger.setLevel('INFO');
+    return logger;
+}
+
+app.use(log4js.connectLogger(this.logger('normal'), {level:'auto', format:':method :url'}));
+
+
 
 // load controllers
 require("./lib/router")(app, { verbose : !module.parent });

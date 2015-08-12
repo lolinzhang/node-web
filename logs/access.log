@@ -1,0 +1,7 @@
+[2015-08-11 16:15:53.694] [WARN] normal - GET /
+[2015-08-11 16:17:00.367] [WARN] normal - GET /movie/add
+[2015-08-11 16:17:01.509] [WARN] normal - GET /movie/add
+[2015-08-11 16:17:01.996] [ERROR] normal - GET /movie
+[2015-08-11 16:17:02.862] [WARN] normal - GET /movie/add
+[2015-08-11 16:17:03.522] [ERROR] normal - GET /movie
+[2015-08-11 16:17:04.351] [WARN] normal - GET /movie/add
